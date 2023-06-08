@@ -12,7 +12,9 @@ function App() {
         setSelectedPlot(value);
         console.log(selectedPlot)
     }
+    function handlePlot(rowIndex,colIndex,plot){
 
+    }
     function handleLayoutChange(){
         console.log(row)
         console.log(col)

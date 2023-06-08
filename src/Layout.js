@@ -1,4 +1,3 @@
-import {useState} from "react";
 import Plot from "./Plot";
 
 export default function Layout(props) {

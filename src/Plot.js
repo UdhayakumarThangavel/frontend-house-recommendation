@@ -5,6 +5,14 @@ export default function Plot(props){
     const [isHover, setIsHover] = useState(false);
     const [name, setName] = useState(props.value);
     console.log(key)
+    const handlePlotNotoName = (value) =>{
+        switch (value){
+            case 1:
+                return 'House'
+            case 2:
+                return ''
+        }
+    }
     const handleMouseEnter = () => {
         setIsHover(true);
         setName("click to add")
