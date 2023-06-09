@@ -3,7 +3,7 @@ export function findServices(layout,currServiceType){
     const services = []
     for(let i=0;i<layout.length;i++){
         for(let j=0;j<layout.length;j++){
-            if(layout[i][j]===currServiceType){
+            if(layout[i][j][0]===currServiceType || layout[i][j][1]===currServiceType || layout[i][j][2]===currServiceType ){
                 services.push([i,j])
             }
         }
@@ -17,7 +17,7 @@ export function findHouses(layout){
     const houses = []
     for(let i=0;i<layout.length;i++){
         for(let j=0;j<layout.length;j++){
-            if(layout[i][j]>=1000){
+            if(layout[i][j][0]>=1000){
                 houses.push([i,j])
             }
         }

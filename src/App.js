@@ -21,10 +21,11 @@ function App() {
             Gym:0
         }
     })
-    const [layout, setLayout] = useState(new Array(0).fill(2).map(value => (
-        new Array(0).fill(0)
+    const [layout, setLayout] = useState(new Array(0).fill(2).map(() => (
+        new Array(0).fill(0).map(()=>(new Array(3).fill(0)))
     )));
 
+    //console.table(layout)
     const handlePlotNotoName = (value) => {
         if(value===1){
             return `House`
@@ -39,7 +40,7 @@ function App() {
         }else if(value>=1000){
             return `House ${value%100}`
         }else {
-            return ' '
+            return ''
         }
     }
     function handleSelectPlot(value) {
@@ -48,22 +49,34 @@ function App() {
     function handlePlot(rowIndex, colIndex) {
         const tempLayout = layout
         if (selectedPlot === -1) {
-            const h = '' + tempLayout[rowIndex][colIndex]
+            const h = '' + tempLayout[rowIndex][colIndex][0]
             if(h.includes("House")){
-                tempLayout[rowIndex][colIndex] = 0
+                tempLayout[rowIndex][colIndex][0] = 0
+                tempLayout[rowIndex][colIndex][1] = 0
+                tempLayout[rowIndex][colIndex][2] = 0
             }else{
-                tempLayout[rowIndex][colIndex] = 0
+                tempLayout[rowIndex][colIndex][0] = 0
+                tempLayout[rowIndex][colIndex][1] = 0
+                tempLayout[rowIndex][colIndex][2] = 0
                 if(housesCount>0){
                     setHouseCount(housesCount-1)
                 }
             }
         } else {
             if(selectedPlot===1){
-                tempLayout[rowIndex][colIndex] = 1000+houseIndex+1
+                console.log(tempLayout[rowIndex][colIndex][0])
+                tempLayout[rowIndex][colIndex][0] = 1000+houseIndex+1
                 setHouseCount(housesCount+1)
                 setHouseIndex(houseIndex+1)
             }else {
-                tempLayout[rowIndex][colIndex] = selectedPlot
+                if(selectedPlot===2){
+                    tempLayout[rowIndex][colIndex][0] = selectedPlot
+                }else if(selectedPlot===3){
+                    tempLayout[rowIndex][colIndex][1] = selectedPlot
+                }else if(selectedPlot===4){
+                    tempLayout[rowIndex][colIndex][2] = selectedPlot
+                }
+
             }
 
         }
@@ -72,8 +85,8 @@ function App() {
     }
     function handleLayoutChange() {
         if (isLayoutCreated) {
-            setLayout(new Array(0).fill(0).map(value => (
-                new Array(0).fill(0)
+            setLayout(new Array(0).fill(0).map(() => (
+                new Array(0).fill(0).map(()=>(new Array(3).fill(0)))
             )))
             setIsLayoutCreated(false)
             setRow(null)
@@ -93,12 +106,12 @@ function App() {
             })
         } else {
             if (row > 1 && col > 1) {
-                setLayout(new Array(+row).fill(2).map(value => (
-                    new Array(+col).fill(0)
+                setLayout(new Array(+row).fill(2).map(() => (
+                    new Array(+col).fill(0).map(()=>(new Array(3).fill(0)))
                 )))
                 setIsLayoutCreated(true)
             } else {
-                alert("layout value should be atleast 2x2")
+                alert("layout value should be at least 2x2")
                 setRow(null)
                 setCol(null)
             }
@@ -131,16 +144,16 @@ function App() {
                 const houseScore = allServiceDistance.reduce((prev,curr)=>prev + curr,0)
                 houseScores.push([houses[i],houseScore,allServiceDistance])
             }
-            let tempmin = 0
+            let tempMin = 0
             for(let i=0;i<houseScores.length;i++){
-                if(houseScores[tempmin][1] > houseScores[i][1]){
-                    tempmin = i
+                if(houseScores[tempMin][1] > houseScores[i][1]){
+                    tempMin = i
                 }
             }
-            const bestHouse = houseScores[tempmin]
+            const bestHouse = houseScores[tempMin]
             setResult({
                 heading:"Best House",
-                bestHouse:`House ${layout[bestHouse[0][0]][bestHouse[0][1]]%100}`,
+                bestHouse:`House ${layout[bestHouse[0][0]][bestHouse[0][1]][0]%100}`,
                 score:`Overall Score: ${bestHouse[1]}`,
                 serviceDistance:{
                     Restaurant:bestHouse[2][0],
@@ -217,7 +230,6 @@ function App() {
                 </Modal.Header>
                 <Modal.Body>
                     <p className="t-3 fs-4 fw-bold">{result.bestHouse}</p>
-
                     <p>{result.score}</p>
                     {result.serviceDistance.Restaurant>0?<p>Restaurant: {result.serviceDistance.Restaurant} km</p>:<p></p>}
                     {result.serviceDistance.Hospital>0?<p>Hospital: {result.serviceDistance.Hospital} km</p>:<p></p>}
