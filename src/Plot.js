@@ -4,26 +4,41 @@ export default function Plot(props) {
     const [isHover, setIsHover] = useState(false);
     const [enableOnClick, setEnableOnClick] = useState(false)
     const [hoverColor, setHoverColor] = useState("#00BFFFFF")
-    const [name, setName] = useState(props.handlePlotNotoName(+props.layout[+props.rowIndex][+props.colIndex]));
+    function handleName(){
+        const name1 = props.handlePlotNotoName(+props.layout[+props.rowIndex][+props.colIndex][0])
+        const name2 = props.handlePlotNotoName(+props.layout[+props.rowIndex][+props.colIndex][1])
+        const name3 = props.handlePlotNotoName(+props.layout[+props.rowIndex][+props.colIndex][2])
+        return name1+" "+name2+" "+name3
+    }
 
+    const [name, setName] = useState(handleName());
     const handleMouseEnter = () => {
-        if (name === ' ' && props.handlePlotNotoName(props.selectedPlot) !== 'Delete' ) {
-            setIsHover(true);
-            setEnableOnClick(true)
-            setName(`Plot ${props.handlePlotNotoName(props.selectedPlot)}`)
-        } else if (props.handlePlotNotoName(props.selectedPlot) === 'Delete' && name !== ' ') {
+        if (!name.includes(props.handlePlotNotoName(props.selectedPlot)) && props.handlePlotNotoName(props.selectedPlot) !== 'Delete' ) {
+            if(props.handlePlotNotoName(props.selectedPlot) === 'House' && !name.includes("Restaurant") && !name.includes("Hospital") && !name.includes("Gym")){
+                setIsHover(true);
+                setEnableOnClick(true)
+                setName(`Plot ${props.handlePlotNotoName(props.selectedPlot)}`)
+            }else if(props.handlePlotNotoName(props.selectedPlot) !== 'House'){
+                if(!name.includes("House")){
+                    console.log("yes")
+                    setIsHover(true);
+                    setEnableOnClick(true)
+                    setName(`Plot ${props.handlePlotNotoName(props.selectedPlot)}`)
+                }
+
+            }
+        } else if (props.handlePlotNotoName(props.selectedPlot) === 'Delete' && name !== '  ') {
             setHoverColor("#EA6969FF")
             setIsHover(true);
             setEnableOnClick(true)
             setName(`${props.handlePlotNotoName(props.selectedPlot)}`)
         }
-
     };
     const handleMouseLeave = () => {
         setIsHover(false);
         setEnableOnClick(false)
         setHoverColor("#00BFFFFF")
-        setName(props.handlePlotNotoName(+props.layout[+props.rowIndex][+props.colIndex]))
+        setName(handleName())
     };
     const boxStyleHover = {
         backgroundColor: hoverColor,
@@ -41,6 +56,7 @@ export default function Plot(props) {
 
     const handleOnClick = () => {
         if (enableOnClick) {
+            console.log(enableOnClick)
             props.handlePlot(+props.rowIndex, +props.colIndex)
             handleMouseLeave()
         }
