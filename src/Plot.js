@@ -1,46 +1,57 @@
-import {useState} from "react";
+import {useState } from "react";
 
-export default function Plot(props){
-    const key = `${props.rowIndex+1}${props.colIndex+1}`
+export default function Plot(props) {
     const [isHover, setIsHover] = useState(false);
-    const [name, setName] = useState(props.value);
-    console.log(key)
-    const handlePlotNotoName = (value) =>{
-        switch (value){
-            case 1:
-                return 'House'
-            case 2:
-                return ''
-        }
-    }
+    const [enableOnClick, setEnableOnClick] = useState(false)
+    const [hoverColor, setHoverColor] = useState("#00BFFFFF")
+    const [name, setName] = useState(props.handlePlotNotoName(+props.layout[+props.rowIndex][+props.colIndex]));
+
     const handleMouseEnter = () => {
-        setIsHover(true);
-        setName("click to add")
+        if (name === ' ' && props.handlePlotNotoName(props.selectedPlot) !== 'Delete' ) {
+            setIsHover(true);
+            setEnableOnClick(true)
+            setName(`Plot ${props.handlePlotNotoName(props.selectedPlot)}`)
+        } else if (props.handlePlotNotoName(props.selectedPlot) === 'Delete' && name !== ' ') {
+            setHoverColor("#EA6969FF")
+            setIsHover(true);
+            setEnableOnClick(true)
+            setName(`${props.handlePlotNotoName(props.selectedPlot)}`)
+        }
+
     };
     const handleMouseLeave = () => {
         setIsHover(false);
-        setName(props.value)
+        setEnableOnClick(false)
+        setHoverColor("#00BFFFFF")
+        setName(props.handlePlotNotoName(+props.layout[+props.rowIndex][+props.colIndex]))
     };
-    const boxStyle = {
-        backgroundColor: 'rgb(0, 191, 255)',
+    const boxStyleHover = {
+        backgroundColor: hoverColor,
         justifyContent: 'center',
         alignItems: 'center',
         cursor: 'pointer',
     };
     const boxStyleNormal = {
-        backgroundColor: 'rgba(246,246,246,0.5)',
+        backgroundColor: '#F6F6F67F',
         justifyContent: 'center',
         alignItems: 'center',
         cursor: 'pointer',
 
     };
 
-    return(
-        <div key={key}
-             onMouseEnter={handleMouseEnter}
-             onMouseLeave={handleMouseLeave}
-             style={isHover ?boxStyle:boxStyleNormal}  className="col border  d-flex flex-column ">
-            {isHover?<span>{name}&nbsp;</span>:<span>{key}&nbsp;</span>}
+    const handleOnClick = () => {
+        if (enableOnClick) {
+            props.handlePlot(+props.rowIndex, +props.colIndex)
+            handleMouseLeave()
+        }
+    }
+    return (
+        <div
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleOnClick()}
+            style={isHover ? boxStyleHover : boxStyleNormal} className="col border  d-flex flex-column ">
+            {isHover ? <span style={{ fontSize: 12 }}>{name}&nbsp;</span> : <span>{name}&nbsp;</span>}
         </div>
     )
 }
