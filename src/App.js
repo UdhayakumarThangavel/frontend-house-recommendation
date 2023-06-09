@@ -81,7 +81,7 @@ function App() {
 
         }
         setLayout(tempLayout)
-        console.table(layout)
+        //console.table(layout)
     }
     function handleLayoutChange() {
         if (isLayoutCreated) {
